@@ -10,16 +10,18 @@ class BDHandler():
         """
         self._dbpath =dbpath
         self._tablename=tablename
-        self._con =sqlite3.connect(self._dbpath,check_same_thread=False)
+        self._con=sqlite3()
+        self._con.connect(self._dbpath,check_same_thread=False)
         self._cursor = self._con.cursor()
-        self._col_names=tags.keys()
+        self._col_names = tags.keys()
         self._lock = Lock()
         self.createTable()
+              
     def __del__(self):
         """
         destrutor
         """
-        self._con.close
+        self._con.close()
     def createTable(self):
         """
         este é o metodo que cria a tabela para amarzenar dados caso ela nao exista
@@ -56,6 +58,8 @@ class BDHandler():
             self._lock.release()
         except Exception as e:
             print("erro: ", e.args)
+        finally:
+            self._lock.release()
     
     def selectData (self, cols, init_t, final_t):
         try:
@@ -70,5 +74,6 @@ class BDHandler():
             return dados
         except Exception as e:
             print("erro: ", e.args)
-
+        finally:
+            self._lock.release()
             

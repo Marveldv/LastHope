@@ -17,9 +17,8 @@ from timeseriesgraph import TimeSeriesGraph
 from lib import Soft,Inversor,Direta
 from datetime import datetime
 from kivy.core.window import Window
-# from bdhandler import BdHandler
+from bdhandler import BDHandler
 import random
-
 
 
 class MyWidget(MDScreen):
@@ -40,10 +39,11 @@ class MyWidget(MDScreen):
     Direta = 1319 #Direta
     _max_points = 20
     
+    db_path = "C:\\Users\\User\\Downloads\\15647NeonBand.RarZipExtractorPro_g3b9h1p9bdemw!App\\Rar Zip Extractor Pro\\Supervisorio_17.01.2023\\db\\scada.db"
 
     _Escrita = {}
     
-    Endereços = {'Temperatura_R':{'addr':700,'tag':'FP','Div':10},
+    _Endereços = {'Temperatura_R':{'addr':700,'tag':'FP','Div':10},
              'Temperatura_S':{'addr':702,'tag':'FP','Div':10},         
              'Temperatura_T':{'addr':704,'tag':'FP','Div':10},
              'Temperatura_CARC':{'addr':706,'tag':'FP','Div':10},
@@ -74,10 +74,10 @@ class MyWidget(MDScreen):
         self._meas = {}
         self.inicio = False
         self._RS = self.ids.tanque.size[1]
-        
+        self._db = BDHandler(kwargs.get('db_path'),self._Endereços)
         self.ids.hostname.text = self.IP
         self.ids.port.text = str(self.Port)
-        
+
         for key, value in self.Endereços.items():
             if key == 'Porcentagem do reservatorio':
                 self.Endereços[key]['color'] = (0,0,1,1)
@@ -136,7 +136,7 @@ class MyWidget(MDScreen):
                 self.lerdado()
                 self.UpdadteGUI()
                 self.escreverdado()
-                # self._bd = BdHandler(kwargs.get('db_path'),self._tags)
+                self._db.insertData(self._meas)
                 sleep(1)
 
         except Exception as e:
