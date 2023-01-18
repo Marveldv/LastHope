@@ -1,0 +1,554 @@
+#:kivy 1.11.1
+<MyWidget>:
+    BoxLayout:
+        orientation:'horizontal'
+        BoxLayout:
+            orientation:'vertical'
+            MDTopAppBar:
+                title: "Bomba"
+            MDTabs:
+                id: tabs
+                # on_tab_switch: root.on_tab_switch(*args)
+                Tab:
+                    id: config
+                    title: "Configuração"
+                    icon: 'cog'
+                    BoxLayout:
+                        orientation:'vertical'
+                        MDLabel:
+                            text: ""
+                        MDTextField:
+                            id: hostname
+                            text: "127.0.0.1"
+                            hint_text: "Endereço IP"
+                            size_hint: {0.3, None}
+                            height: "60dp"
+                            pos_hint: {"center_x":0.5,"center_y":0.5}
+                        MDTextField:
+                            id: port
+                            text: "502"
+                            hint_text: "Porta"
+                            size_hint: {0.3,None}
+                            height: "60dp"
+                            pos_hint: {"center_x":0.5,"center_y":0.5}
+                        MDRoundFlatButton:
+                            id: bt_con
+                            text: "Conectar"
+                            icon: 'connection'
+                            pos_hint: {"center_x":0.5,"center_y":0.5}
+                            on_release:
+                                root.conectar()
+                        MDLabel:
+                            text: ""
+                Tab:
+                    id: grafico
+                    title: "Grafico"
+                    icon: 'chart-areaspline'
+                    BoxLayout:
+                        orientation:'vertical'
+
+                        BoxLayout:
+                            orientation:'vertical'
+                            size_hint: 
+                            TimeSeriesGraph:
+                                id: graph
+                                xlabel: 'Horário'
+                                ylabel: 'Nivel [%]'
+                                background_color: 0.5,0.5,0.5,0.5
+                                x_ticks_minor: 1
+                                x_ticks_major: 5
+                                y_ticks_major: 100
+                                y_grid_label: True
+                                x_grid_label: True
+                                padding: 5
+                                x_grid: True
+                                y_grid: True
+                                xmin: 0
+                                ymin: 0
+                                ymax: 1000
+                        
+                Tab:
+                    id: historico
+                    title: "Historico"
+                    icon: 'clipboard-text-clock-outline'
+                    BoxLayout:
+                        orientation:'vertical'
+
+                        BoxLayout:
+                            orientation:'vertical'
+                            size_hint: 
+                            TimeSeriesGraph:
+                                id: graph_h
+                                xlabel: 'Horário'
+                                ylabel: 'Nivel [%]'
+                                background_color: 0.5,0.5,0.5,0.5
+                                x_ticks_minor: 1
+                                x_ticks_major: 5
+                                y_ticks_major: 100
+                                y_grid_label: True
+                                x_grid_label: True
+                                padding: 5
+                                x_grid: True
+                                y_grid: True
+                                xmin: 0
+                                ymin: 0
+                                ymax: 1000
+                        BoxLayout:
+                            orientation:'horizontal'
+                            size_hint:(1,0.4)
+                            BoxLayout:
+                                orientation:'vertical'
+                                BoxLayout:
+                                    orientation:'vertical'
+                                    MDTextField:
+                                        id: init
+                                        text: "DD-MM-YYYY"
+                                        hint_text: "Data inicial"
+                                        size_hint: {0.4,None}
+                                        height: "60dp"
+                                        pos_hint: {"center_x":0.5,"center_y":0.5}
+                                    MDTextField:
+                                        id: final
+                                        text: "DD-MM-YYYY"
+                                        hint_text: "Data final"
+                                        size_hint: {0.4,None}
+                                        height: "60dp"
+                                        pos_hint: {"center_x":0.5,"center_y":0.5}
+
+
+                            BoxLayout:
+                                orientation:'vertical'
+                                size_hint:(0.3,None)
+                                
+                                MDIconButton:
+                                    id: busca
+                                    icon: "magnify"
+                                    pos_hint: {"center_x":.5, "center_y": .5}
+                                MDIconButton:
+                                    id: reset
+                                    icon: "restore"
+                                    pos_hint: {"center_x":.5, "center_y": .5}  
+
+
+
+
+
+
+                Tab:
+                    id: controle
+                    title: "Controle"
+                    icon: 'car-cruise-control'
+                    BoxLayout:
+                        orientation:'vertical'
+                        BoxLayout:
+                            orientation:'horizontal'
+                            size_hint: (.98,0.7)
+                            canvas:
+                                # Color:
+                                #     rgba: (1,0,0,1)#red
+                                # Rectangle:
+                                #     pos: self.pos
+                                #     size: self.size
+                            BoxLayout:
+                                orientation:'vertical'
+                                MDLabel:
+                                    text: ""
+                                Button:
+                                    id: ligar
+                                    text: "Ligar"
+                                    background_color: (1.0, 1.0, 1.0, 1.0)
+                                    on_release:
+                                        root.alternar()
+
+                                MDLabel:
+                                    text: ""
+                                    size_hint: (1,0.2)
+                                Button:
+                                    id: soft
+                                    text: "Soft"
+                                    on_release:
+                                        root.modo_init(1)
+                                MDLabel:
+                                    text: ""
+                                    size_hint: (1,0.2)
+                                Button:
+                                    id: inversor
+                                    text: "Inversor"
+                                    on_release:
+                                        root.modo_init(2)
+                                MDLabel:
+                                    text: ""
+                                    size_hint: (1,0.2)
+                                Button:
+                                    id: direta
+                                    text: "Direta"
+                                    on_release:
+                                        root.modo_init(3)
+                                MDLabel:
+                                    text: ""
+                            BoxLayout:
+                                orientation:'vertical'
+                                size_hint: (0.05,1)
+                                canvas:
+                                    Color:
+                                        rgba: (0.5,0.5,0.5,1)
+                                    Rectangle:
+                                        pos: self.pos
+                                        size: self.size
+                            BoxLayout:
+                                orientation:'vertical'
+                                id: modo_init
+                                MDLabel:
+                                    text: "Modo de Inicialização"
+                                    halign: "center"
+                                
+                        BoxLayout:
+                            orientation:'vertical'
+                            size_hint: (1,0.5)
+                            canvas:
+                                Color:
+                                    rgba: (1,1,1,1)
+                                Rectangle:
+                                    pos: self.pos
+                                    size: self.size
+                            Button:
+                                text:"Motor"
+                                size_hint: (1,0.3)
+                            BoxLayout:
+                                orientation:'horizontal'
+                                # MDLabel:
+                                #     text: "bbbbb"
+                                BoxLayout:
+                                    orientation:'vertical'
+                                    padding: "5dp"
+                                    BoxLayout:
+                                        orientation:'vertical'
+                                        padding: "5dp"
+                                        canvas:
+                                            Color:
+                                                rgba: (0.7,0.7,0.7,.4)
+                                            Rectangle:
+                                                pos: self.pos
+                                                size: self.size
+                                        MDLabel:
+                                            text: "Temperatura Fase R"
+                                            halign: "center"
+                                        MDLabel:
+                                            id: temperatura_R
+                                            text: "0"
+                                            halign: "center"
+                                        MDLabel:
+                                            text: "Temperatura Fase S"
+                                            halign: "center"
+                                        MDLabel:
+                                            id: temperatura_S
+                                            text: "0"
+                                            halign: "center"
+                                        MDLabel:
+                                            text: "Temperatura Fase T"
+                                            halign: "center"
+                                        MDLabel:
+                                            id: temperatura_T
+                                            text: "0"
+                                            halign: "center"
+                                BoxLayout:
+                                    orientation:'vertical'
+                                    size_hint: (0.05,1)
+                                    canvas:
+                                        Color:
+                                            rgba: (0.5,0.5,0.5,1)
+                                        Rectangle:
+                                            pos: self.pos
+                                            size: self.size
+                                BoxLayout:
+                                    orientation:'vertical'
+                                    padding: "5dp"
+                                    BoxLayout:
+                                        orientation:'vertical'
+                                        padding: "5dp"
+                                        canvas:
+                                            Color:
+                                                rgba: (0.7,0.7,0.7,.4)
+                                            Rectangle:
+                                                pos: self.pos
+                                                size: self.size
+                                        MDLabel:
+                                            text: "Tensao RS"
+                                            halign: "center"
+                                        MDLabel:
+                                            id: tensao_RS
+                                            text: "0"
+                                            halign: "center"
+                                        MDLabel:
+                                            text: "Tensao ST"
+                                            halign: "center"
+                                        MDLabel:
+                                            id: tensao_ST
+                                            text: "0"
+                                            halign: "center"
+                                        MDLabel:
+                                            text: "TensaoTR"
+                                            halign: "center"
+                                        MDLabel:
+                                            id: tensao_TR
+                                            text: "0"
+                                            halign: "center"
+                                            
+                                BoxLayout:
+                                    orientation:'vertical'
+                                    size_hint: (0.05,1)
+                                    canvas:
+                                        Color:
+                                            rgba: (0.5,0.5,0.5,1)
+                                        Rectangle:
+                                            pos: self.pos
+                                            size: self.size
+                                BoxLayout:
+                                    orientation:'vertical'
+                                    padding: "5dp"
+                                    BoxLayout:
+                                        orientation:'vertical'
+                                        padding: "5dp"
+                                        canvas:
+                                            Color:
+                                                rgba: (0.7,0.7,0.7,.4)
+                                            Rectangle:
+                                                pos: self.pos
+                                                size: self.size
+                                        MDLabel:
+                                            text: "corrente R"
+                                            halign: "center"
+                                        MDLabel:
+                                            id: corrente_R
+                                            text: "0"
+                                            halign: "center"
+                                            background_color: (1,1,1,1)
+                                    BoxLayout:
+                                        orientation:'vertical'
+                                        canvas:
+                                            Color:
+                                                rgba: (0.7,0.7,0.7,.4)
+                                            Rectangle:
+                                                pos: self.pos
+                                                size: self.size
+                                        MDLabel:
+                                            text: "corrente S"
+                                            halign: "center"
+                                        MDLabel:
+                                            id: corrente_S
+                                            text: "0"
+                                            halign: "center"       
+                                    BoxLayout:
+                                        orientation:'vertical'
+                                        canvas:
+                                            Color:
+                                                rgba: (0.7,0.7,0.7,.4)
+                                            Rectangle:
+                                                pos: self.pos
+                                                size: self.size
+                                        MDLabel:
+                                            text: "corrente T"
+                                            halign: "center"
+                                        MDLabel:
+                                            id: corrente_T
+                                            text: "0"
+                                            halign: "center"
+                                    BoxLayout:
+                                        orientation:'vertical'
+                                        canvas:
+                                            Color:
+                                                rgba: (0.7,0.7,0.7,.4)
+                                            Rectangle:
+                                                pos: self.pos
+                                                size: self.size
+                                        MDLabel:
+                                            text: "corrente média"
+                                            halign: "center"
+                                        MDLabel:
+                                            id: corrente_MED
+                                            text: "0"
+                                            halign: "center"
+        FloatLayout:
+            orientation:'vertical'
+            canvas:
+                Color:
+                    rgba: (1,1,1,.9)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            Image:
+                id: planta
+                source:"imgs/imagemdesligada.png"
+                pos_hint: {"center_x":0.5,"center_y":0.5}
+                # norm_image_size: True
+            MDLabel:
+                id: tanque
+                size_hint: (None,None)
+                size:("84dp","77dp")
+                pos_hint: {"x":0.595,"y":.66}
+                canvas:
+                    Color:
+                        rgba: (0,.4,1,0.8)
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            BoxLayout:
+                orientation:'vertical'
+                pos_hint: {"center_x":0.2,"center_y":0.43}
+                size_hint:(.26,.1)
+                
+                BoxLayout:
+                    orientation:'horizontal'
+                    MDLabel:
+                        text: "RPM:"
+                        font_size: "15dp"
+                    MDLabel:
+                        id: RPM
+                        text: "0"
+                        font_size: "15dp"
+                BoxLayout:
+                    orientation:'horizontal'
+                    MDLabel:
+                        text: "Torque:"
+                        font_size: "15dp"
+                    MDLabel:
+                        id: Torque
+                        text: "0"
+                        font_size: "15dp"
+
+            BoxLayout:
+                orientation:'vertical'
+                pos_hint: {"center_x":0.2,"center_y":0.75}
+                size_hint:(.3,.1)
+                
+                BoxLayout:
+                    orientation:'horizontal'
+                    MDLabel:
+                        text: "Pressão:"
+                        font_size: "15dp"
+                    MDLabel:
+                        id: Pressao
+                        text: "0"
+                        font_size: "15dp"
+
+            BoxLayout:
+                orientation:'vertical'
+                pos_hint: {"center_x":0.45,"center_y":0.87}
+                size_hint:(.26,.1)
+                
+                BoxLayout:
+                    orientation:'horizontal'
+                    MDLabel:
+                        text: "Vazão:"
+                        font_size: "15dp"
+                    MDLabel:
+                        id: Vazao
+                        text: "0"
+                        font_size: "15dp"
+            BoxLayout:
+                orientation:'vertical'
+                pos_hint: {"center_x":0.78,"center_y":0.87}
+                size_hint:(.35,.1)
+                
+                BoxLayout:
+                    orientation:'horizontal'
+                    MDLabel:
+                        text: "% reservatorio:"
+                        font_size: "15dp"
+                    MDLabel:
+                        id: Porcentagem do reservatorio
+                        text: "0"
+                        font_size: "15dp"
+
+
+
+<Tab>:
+
+<Soft>:
+    BoxLayout:
+        orientation:'vertical'
+        BoxLayout:
+            orientation:'vertical'
+            size_hint: (1,.5)
+            MDLabel:
+                text: "Selecionado:\nSoft Start"
+                halign: "center"
+        BoxLayout:
+            orientation:'horizontal'
+            BoxLayout:
+                orientation:'horizontal'
+                BoxLayout:
+                    orientation:'vertical'
+                    MDTextField:
+                        text: "10"
+                        hint_text: "Aceleração(s)"
+                        size_hint: {.3,None}
+                        height: "60dp"
+                        pos_hint: {"center_x":0.2,"center_y":0.5}
+                    MDTextField:
+                        text: "10"
+                        hint_text: "Desaceleração(s)"
+                        size_hint: {.3,None}
+                        height: "60dp"
+                        pos_hint: {"center_x":0.2,"center_y":0.5}
+                    MDLabel:
+                        text: "min: 10s,max:60s"
+                        font_size: "10dp"
+                        halign: "center"
+
+<Inversor>:
+    BoxLayout:
+        orientation:'vertical'
+        BoxLayout:
+            orientation:'vertical'
+            size_hint: (1,.5)
+            MDLabel:
+                text: "Selecionado:\nInversor"
+                halign: "center"
+        BoxLayout:
+            orientation:'horizontal'
+            BoxLayout:
+                orientation:'horizontal'
+                BoxLayout:
+                    orientation:'vertical'
+                    MDTextField:
+                        text: "10"
+                        hint_text: "Aceleração(s)"
+                        size_hint: {.3,None}
+                        height: "60dp"
+                        pos_hint: {"center_x":0.2,"center_y":0.5}
+                    MDTextField:
+                        text: "10"
+                        hint_text: "Desaceleração(s)"
+                        size_hint: {.3,None}
+                        height: "60dp"
+                        pos_hint: {"center_x":0.2,"center_y":0.5}
+                    MDLabel:
+                        text: "min: 10s,max:60s"
+                        font_size: "10dp"
+                        halign: "center"
+                    MDLabel:
+                        text: "Velocidade(Hz)"
+                        font_size: "15dp"
+                        halign: "center"
+                    MDLabel:
+                        id:velocidade
+                        text: "0"
+                        halign: "center"
+
+                BoxLayout:
+                    orientation:'vertical'
+                    size_hint: {.5,1}
+                    MDSlider:
+                        id: slider
+                        hint: True
+                        hint_bg_color: "white"
+                        orientation:'vertical'
+
+<Direta>:
+    BoxLayout:
+        orientation:'vertical'
+        MDLabel:
+            text: "Selecionada:\nLigação Direta\nAperte Ligar"
+            halign: "center"
+   
